@@ -1,4 +1,5 @@
 const { sequelize } = require("../models");
+const { Op } = require("sequelize");
 const db = require("../models");
 
 const memberController = {
@@ -22,18 +23,28 @@ const memberController = {
         const { instagramUrl, facebookUrl, linkedinUrl } = req.query
 
         try {
-            const ig = await db.Member.findOne({ where: { instagramUrl } })
-            const fb = await db.Member.findOne({ where: { facebookUrl } })
-            const linkedIn = await db.Member.findOne({ where: { linkedinUrl } })
 
-            if (ig || fb || linkedIn) {
+            const data = await db.Member.findAll({where:{
+                [Op.or]:[
+                    {instagramUrl},
+                    {facebookUrl},
+                    {linkedinUrl}
+                ]
+            }});
+           
+            if (data.length > 0) {
                 res.status(200).json(
-                    [ig,fb,linkedIn].filter(value=> value !=null)
+                   await data
                 )
+            }else{
+                res.status(404).json({
+                    msg: 'Member not found in DB'
+                });
             }
+
         } catch (error) {
-            res.json({
-                msg: 'Member not found in DB'
+            res.status(500).json({
+                msg: "Please contact the administrator" 
             })
         }
     },
