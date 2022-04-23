@@ -112,30 +112,28 @@ const memberController = {
 
     },
 
-
     softDelete: async (req = request, res = response) => {
         const { instagramUrl=false, facebookUrl=false, linkedinUrl=false } = req.query
         
-        const data = await db.Member.findAll({
-            where: {
-                [Op.or]: [
-                    { instagramUrl },
-                    {facebookUrl},
-                    { linkedinUrl },
-                ],
-                [Op.and]: [
-                    { is_deleted: false }
-                ]
-            }
-        });
-console.log(data)
         try {
-    
+            const data = await db.Member.findAll({
+                where: {
+                    [Op.or]: [
+                        { instagramUrl },
+                        {facebookUrl},
+                        { linkedinUrl },
+                    ],
+                    [Op.and]: [
+                        { is_deleted: false }
+                    ]
+                }
+            });
+            
             if(data[0]){
                 await data[0].update({is_deleted:true});
-    
-                res.json(200).status({
-                    msg:`member has been soft-deleted !!`
+                
+                res.status(200).json({
+                    msg:"Member has been soft-delete !!"
                 })
             }else{
                 res.status(404).json({
@@ -148,10 +146,6 @@ console.log(data)
             })
         }
     },
-
-    hardDelete: async (req = request, res = response) => {
-
-    }
 
 }
 
