@@ -78,7 +78,7 @@ const memberController = {
 
     Update: async (req = request, res = response) => {
         const { name, facebookUrl, instagramUrl, linkedinUrl, image, description, is_deleted } = req.query;
-        
+
         try {
             const data = await db.Member.findAll({
                 where: {
@@ -114,7 +114,38 @@ const memberController = {
 
 
     softDelete: async (req = request, res = response) => {
+        const { instagramUrl, facebookUrl, linkedinUrl, is_deleted } = req.query
 
+        try {
+            const data = await db.Member.findAll({
+                where: {
+                    [Op.or]: [
+                        { instagramUrl },
+                        { facebookUrl },
+                        { linkedinUrl },
+                    ],
+                    [Op.and]: [
+                        { is_deleted: false }
+                    ]
+                }
+            });
+    
+            if(data[0]){
+                await data[0].update({is_deleted:true});
+    
+                res.json(200).status({
+                    msg:`member has been soft-deleted !!`
+                })
+            }else{
+                res.status(404).json({
+                    msg: "No members with the provided data exist in DB"
+                })
+            }
+        } catch (error) {
+            res.status(500).json({
+                msg: "Please contact the administrator"
+            })
+        }
     },
 
     hardDelete: async (req = request, res = response) => {
