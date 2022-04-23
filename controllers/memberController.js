@@ -6,7 +6,11 @@ const memberController = {
 
     readAll: async (req = request, res = response) => {
         try {
-            const data = await db.Member.findAll();
+            const data = await db.Member.findAll({
+                where: {
+                    is_deleted: false
+                }
+            });
 
             res.status(200).json({
                 data
@@ -23,20 +27,24 @@ const memberController = {
         const { instagramUrl, facebookUrl, linkedinUrl } = req.query
 
         try {
+            const data = await db.Member.findAll({
+                where: {
+                    [Op.or]: [
+                        { instagramUrl },
+                        { facebookUrl },
+                        { linkedinUrl },
+                    ],
+                    [Op.and]: [
+                        { is_deleted: false }
+                    ]
+                }
+            });
 
-            const data = await db.Member.findAll({where:{
-                [Op.or]:[
-                    {instagramUrl},
-                    {facebookUrl},
-                    {linkedinUrl}
-                ]
-            }});
-           
             if (data.length > 0) {
                 res.status(200).json(
-                   await data
+                    data
                 )
-            }else{
+            } else {
                 res.status(404).json({
                     msg: 'Member not found in DB'
                 });
@@ -44,16 +52,16 @@ const memberController = {
 
         } catch (error) {
             res.status(500).json({
-                msg: "Please contact the administrator" 
+                msg: "Please contact the administrator"
             })
         }
     },
 
     create: async (req, res) => {
-        const { name, facebookUrl, instagramUrl, linkedinUrl, image, description } = req.body
+        const { name, facebookUrl, instagramUrl, linkedinUrl, image, description, is_deleted = false } = req.body
 
         try {
-            await db.Member.create({ name, facebookUrl, instagramUrl, linkedinUrl, image, description });
+            await db.Member.create({ name, facebookUrl, instagramUrl, linkedinUrl, image, description, is_deleted });
 
             res.status(200).json({
                 msg: 'A new member has been created !!'
@@ -69,6 +77,38 @@ const memberController = {
     },
 
     Update: async (req = request, res = response) => {
+        const { name, facebookUrl, instagramUrl, linkedinUrl, image, description, is_deleted } = req.query;
+        
+        try {
+            const data = await db.Member.findAll({
+                where: {
+                    [Op.or]: [
+                        { instagramUrl },
+                        { facebookUrl },
+                        { linkedinUrl },
+                    ],
+                    [Op.and]: [
+                        { is_deleted: false }
+                    ]
+                }
+            });
+
+            if (data[0]) {
+                await data[0].update({ name, facebookUrl, instagramUrl, linkedinUrl, image, description, is_deleted });
+
+                res.status(200).json({
+                    msg: "Member updated !!"
+                })
+            } else {
+                res.status(404).json({
+                    msg: "No members with the provided data exist in DB"
+                })
+            }
+        } catch (error) {
+            res.status(500).json({
+                msg: "Please contact the administrator"
+            });
+        }
 
     },
 
