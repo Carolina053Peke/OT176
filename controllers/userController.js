@@ -1,8 +1,10 @@
-const db = require("../models");
 const bcrypt = require("bcryptjs");
 const {
     validationResult
 } = require("express-validator");
+const { request, response } = require("express");
+
+const db = require("../models");
 
 const userController = {
     signup: (req, res) => {
@@ -76,6 +78,41 @@ const userController = {
             })
         }
     },
+    getData: async (req = request, res = response) => {
+        const token = req.headers.token;
+
+        try {
+            if (token) {
+                const user = await db.User.findOne({
+                    where: {
+                        token
+                    }
+                })
+
+                const { firstName, lastName, email, image, password, roleId } = user;
+
+                if (user) {
+                    res.status(200).json({
+                        msg: {
+                            firstName,
+                            lastName,
+                            email,
+                            image,
+                            roleId
+                        }
+                    })
+                }else{
+                    res.status(404).json({
+                        msg:"User and credentials does not match"
+                    })
+                }
+            }
+        } catch (error) {
+            res.status(500).json({
+                msg:'Please contact the administrator'
+            })
+        }
+    }
 };
 
 module.exports = userController;
