@@ -8,6 +8,7 @@ router.post('/auth/signup', userValidation.signup, userController.signup);
 router.post('/auth/login', userValidation.login, userController.login);
 router.get('/auth/me', userValidation.authorizations.token, userController.getData);
 router.delete('/auth/me', userValidation.authorizations.token, userController.getData);
+router.get('/:id', [], userController.delete);
 
 
 module.exports = router;
