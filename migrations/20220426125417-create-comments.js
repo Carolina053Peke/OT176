@@ -1,32 +1,33 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('News', {
+    await queryInterface.createTable('Comments', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        allowNull: false,
-        type: Sequelize.STRING
+      user_id: {
+        allowNull:false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id'
+        }
       },
-      content: {
+      body: {
         allowNull: false,
         type: Sequelize.TEXT
       },
-      image: {
+      news_id: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'News',
+          key: 'id'
+        }
       },
-      // categoryId: {
-      //   type: Sequelize.INTEGER,
-      //   references: {
-      //     model: 'Categories',
-      //     key: 'id',
-      //   }
-      // },
       deletedAt: {
         type: Sequelize.DATE
       },
@@ -34,13 +35,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-        updatedAt: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('News');
+    await queryInterface.dropTable('Comments');
   }
 };
