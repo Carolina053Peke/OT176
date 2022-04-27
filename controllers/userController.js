@@ -1,9 +1,12 @@
-const db = require("../models");
 const {
     validationResult
 } = require("express-validator");
-const bcrypt = require("bcryptjs");
 const jwt = require('../utils/jwt')
+const bcrypt = require("bcryptjs");
+const { request, response } = require("express");
+
+const db = require("../models");
+
 
 
 const userController = {
@@ -168,9 +171,71 @@ const userController = {
             }
         }
     },
-    userDelete: (req, res, next) => {
+    getData: async (req = request, res = response) => {
+        const token = req.headers.token;
 
+        try {
+            if (token) {
+                const user = await db.User.findOne({
+                    where: {
+                        token
+                    }
+                })
+
+                const { firstName, lastName, email, image, password, roleId } = user;
+
+                if (user) {
+                    res.status(200).json({
+                        msg: {
+                            firstName,
+                            lastName,
+                            email,
+                            image,
+                            roleId
+                        }
+                    })
+                } else {
+                    res.status(404).json({
+                        msg: "User and credentials does not match"
+                    })
+                }
+            }
+        } catch (error) {
+            return res.status(500).json({
+                msg: 'Please contact the administrator'
+            })
+        }
     },
+    delete: async (req = request, res = response) => {
+        const user_id = Number(req.params.id);
+
+        try {
+            const user = await db.User.findOne({
+                where: {
+                    id: user_id,
+                    is_deleted: false
+                }
+            });
+    
+            if (user) {
+                await user.update({ is_deleted: true })
+                
+                res.json({
+                    msg:"The user has been soft-deleted"
+                });
+
+            }else{
+                res.status(404).json({
+                    msg:`No users with id: ${user_id}, were found !`
+                })
+            }
+        } catch (error) {
+            return res.status(500).json({
+                msg:"Pelase contact the administrator"
+            })
+        }
+
+    }
 };
 
 module.exports = userController;
