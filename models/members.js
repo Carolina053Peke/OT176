@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Members extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,43 +10,45 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+<<<<<<< HEAD:models/Activitie.js
   }
-  User.init(
+  activitie.init(
     {
-      firstName: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      lastName: {
+      image: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      photo: {
-        type: DataTypes.STRING,
-      },
-      roleId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "Role",
-          key: "id",
+        validate: {
+          isUrl: true,
         },
       },
+      content: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      deletedAt: DataTypes.DATE,
     },
     {
       sequelize,
-      modelName: "User",
+      modelName: "Activity",
       paranoid: true,
-      timestamps: true,
     }
   );
-  return User;
+  return Activity;
 };
+=======
+  };
+  Members.init({
+    name: DataTypes.STRING,
+    image: DataTypes.STRING,
+    deleteAt: DataTypes.DATE
+  }, {
+    sequelize,
+    modelName: 'Members',
+  });
+  return Members;
+};
+>>>>>>> a2da9531fa943216bf87ae060b26836b16d00c7e:models/members.js
