@@ -1,4 +1,12 @@
-const jwt = require('jsonwebtoken');
+const {
+	findById
+} = require('../controllers/userController');
+
+const users = require('../utils/users');
+
+const jwt = require('../utils/jwt');
+
+
 const {
 	findById
 } = require('../controllers/userController');
@@ -6,7 +14,8 @@ const {
 //roleId 1 = admin; roleId 2 = user
 
 const authAdmin = async (req, res, next) => {
-	const token = req.cookies.token || req.body.token || req.query.token || req.headers['x-access-token'];
+	const token =
+		req.body.token || req.query.token || req.headers['x-access-token'];
 
 	try {
 		if (token) {
@@ -16,7 +25,7 @@ const authAdmin = async (req, res, next) => {
 			console.log('verifyToken', verifyToken)
 
 
-			let tokenId=verifyToken.user_id
+			let tokenId = verifyToken.user_id
 			const user = await findById(tokenId);
 
 
@@ -38,9 +47,10 @@ const authAdmin = async (req, res, next) => {
 
 		}
 		next();
-	} catch (error) {
+	}catch (error) {
 		return res.status(401).send('Invalid User');
+	
 	}
-};
 
-module.exports = authAdmin;
+} 
+module.exports = authAdmin

@@ -1,4 +1,6 @@
+
 const db = require("../models");
+
 
 const newController = {
     //Find all news

@@ -29,6 +29,11 @@ module.exports = {
       // },
       deletedAt: {
         type: Sequelize.DATE
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> ba675d39d20614d2e668752f050416a28c0875c6
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +42,10 @@ module.exports = {
         updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+<<<<<<< HEAD
+=======
+>>>>>>> 84c923b6da09d0b38b8cb54cc117b293381f54e9
+>>>>>>> ba675d39d20614d2e668752f050416a28c0875c6
       }
     });
   },

@@ -9,9 +9,11 @@ const awsImageUploader = require('../utils/awsImageUploader')
 
 
 router.get('/users', authAdmin, userList);
+router.get('/auth/me', userValidation.authorizations.token, userController.getData);
 router.post("/users/:id", userEdit);
 router.post('/signup', userValidation.signup, signup)
 router.post('/login', userValidation.login, login)
 router.post('/auth/upload',authAdmin, imageValidation, upload, awsImageUploader)
+router.delete('/:id', [], userController.delete);
 
 module.exports = router;
