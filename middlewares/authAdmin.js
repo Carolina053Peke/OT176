@@ -1,8 +1,4 @@
-const {
-	findById
-} = require('../controllers/userController');
 
-const users = require('../utils/users');
 
 const jwt = require('../utils/jwt');
 
