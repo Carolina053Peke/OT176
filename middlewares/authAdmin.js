@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const {
 	findById
-} = require('../utils/users');
+} = require('../controllers/userController');
 
 //roleId 1 = admin; roleId 2 = user
 
