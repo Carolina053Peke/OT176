@@ -1,15 +1,17 @@
 const models = require('../models');
 
 const { Comments } = models;
+
 module.exports = {
   // Fetch all Comments
   fetchAll: async (req, res) => {
     await Comments.findAll({
+      attributes: ['body'],
       order: [['createdAt', 'DESC']],
     })
 
-      .then((comments) => {
-        res.status(200).json(comments.body);
+      .then((data) => {
+        res.status(200).json(data);
       })
       .catch((error) => {
         res.status(500).json(error);
