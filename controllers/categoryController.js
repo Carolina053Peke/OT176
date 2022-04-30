@@ -23,7 +23,8 @@ const categoryController = {
           data: result,
         };
         res.json(response);
-      });
+      })
+      .catch((error) => res.json(error));
   },
   categoryList: (req, res, next) => {
 
