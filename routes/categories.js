@@ -1,11 +1,9 @@
 const express = require('express');
 
 const router = express.Router();
-const contactController = require('../controllers/contactController');
+const { categoryDelete } = require('../controllers/categoryController');
 const authAdmin = require('../middlewares/authAdmin');
 
-/* GET */
-router.get('/contacts', authAdmin, contactController.list);
-/* POST */
+router.delete('/categories/:id', authAdmin, categoryDelete);
 
 module.exports = router;
