@@ -88,7 +88,7 @@ const userController = {
         }).then(async (user) => {
           sendMail(user.email, template.subject, template.html);
           const response = {
-            message: 'Check your email spam box !',
+            message: 'Account created successfully! Check your email spam box!',
             data: {
               firstName: user.firstName,
               lastName: user.lastName,
