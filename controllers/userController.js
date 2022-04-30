@@ -108,13 +108,12 @@ const userController = {
         errors: errors.array(),
       });
     }
-    const user = await db.User.findOne({
-      where: {
-        email: req.body.email,
-      },
-    });
-
     try {
+      const user = await db.User.findOne({
+        where: {
+          email: req.body.email,
+        },
+      });
       if (user) {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           console.log('User Authenticated');
