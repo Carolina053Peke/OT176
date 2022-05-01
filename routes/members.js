@@ -9,7 +9,7 @@ router.get('/', memberController.readAll);
 
 router.post('/', memberMiddleware.create, memberController.create);
 
-router.put('/:id', memberMiddleware.update, memberController.Update);
+router.put('/:id', memberController.Update);
 
 router.delete('/softDeleteExample', memberController.softDelete);
 
