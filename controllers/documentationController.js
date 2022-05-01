@@ -4,7 +4,7 @@
 
 
 const documentationController = {
-    loginDoc: async (req,res) =>{
+    fetchDoc: async (req,res) =>{
         try {
             
             res.json(doc)
