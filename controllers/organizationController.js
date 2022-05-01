@@ -29,7 +29,7 @@ module.exports = {
 
     // Create Organization
 
-    create: (req, res) => {
+    create: async (req, res) => {
 
         await Organization.create({
             name: req.body.name,
@@ -52,7 +52,7 @@ module.exports = {
 
     //Update Organization
 
-    update: (req, res) => {
+    update: async (req, res) => {
         await Organization.findByPk(req.params.id)
 
             .then(function (OrganizationToUpdate) {
@@ -76,7 +76,7 @@ module.exports = {
 
     //Delete Organization
 
-    delete: (req, res) => {
+    delete: async (req, res) => {
         await Organization.destroy({
             where: {
                 id: req.params.id
