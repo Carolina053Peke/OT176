@@ -16,6 +16,8 @@ const commentsController = require('./routes/comments');
 const contactsRouter = require('./routes/contact');
 const backofficeRouter = require('./routes/backoffice');
 const categoriesRouter = require('./routes/categories');
+const organizationRouter = require('./routes/organization');
+const documentationRouter = require('./routes/documentation');
 
 const app = express();
 app.use(cors());
@@ -40,6 +42,8 @@ app.use('/comments', commentsController);
 app.use('/contacts', contactsRouter);
 app.use('/backoffice', backofficeRouter);
 app.use('/categories', categoriesRouter);
+app.use('/organization', organizationRouter);
+app.use('/api', documentationRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
