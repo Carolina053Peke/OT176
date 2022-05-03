@@ -16,4 +16,5 @@ router.get('/', authenticated, authAdmin, fetchAll);
 /* PUT comments */
 router.put('/:id', authenticated, authOwnership('Comments'), update);
 
+
 module.exports = router;

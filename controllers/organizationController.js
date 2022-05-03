@@ -1,7 +1,7 @@
 const { Organization } = require('../models');
 
 module.exports = {
-  // Fetch all Organization
+
   fetchAll: async (req, res) => {
     await Organization.findAll()
 
@@ -13,7 +13,7 @@ module.exports = {
       });
   },
 
-  // Fetch a Organization
+
 
   fetchOne: async (req, res) => {
     await Organization.findByPk(req.params.id)
@@ -36,6 +36,9 @@ module.exports = {
       email: req.body.email,
       welcomeText: req.body.welcomeText,
       aboutUsText: req.body.aboutUsText,
+      facebook: req.body.facebook,
+      instagram: req.body.instagram,
+      linkedin: req.body.linkedin,
     })
       .then((Organization) => {
         res.status(200).json(Organization);
@@ -44,7 +47,7 @@ module.exports = {
         res.status(500).json(error);
       });
   },
-  getDadta: async (req, res) => {
+  getData: async (req, res) => {
     const { name } = req.query;
 
     if (!name) {
@@ -60,7 +63,11 @@ module.exports = {
         },
       });
 
+<<<<<<< HEAD
       const { image, phone, address } = data;
+=======
+      const { image, phone, address, facebook, instagram, linkedin  } = data;
+>>>>>>> 342e8bf3eeefadf0e23117ac0f69273a2c56b1e1
 
       if (data) {
         res.status(200).json({
@@ -68,6 +75,9 @@ module.exports = {
           image,
           phone,
           address,
+          facebook,
+          instagram,
+          linkedin
         });
       }
     } catch (error) {
@@ -89,6 +99,9 @@ module.exports = {
         OrganizationToUpdate.email = req.body.email;
         OrganizationToUpdate.welcomeText = req.body.welcomeText;
         OrganizationToUpdate.aboutUsText = req.body.aboutUsText;
+        OrganizationToUpdate.facebook = req.body.facebook;
+        OrganizationToUpdate.instagram = req.body.instagram;
+        OrganizationToUpdate.linkedin = req.body.linkedin;
         OrganizationToUpdate.save();
       })
       .then((updatedOrganization) => {
