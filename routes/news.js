@@ -6,7 +6,6 @@ const newValidator = require('../validations/news');
 const {
   list, store, detail, update, removeNew,
 } = require('../controllers/newController');
-
 const authAdmin = require('../middlewares/authAdmin');
 const authenticated = require('../middlewares/authenticated');
 
