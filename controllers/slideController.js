@@ -22,6 +22,19 @@ const deleteSlide = async (req, res, next) => {
   }
 };
 
+// eslint-disable-next-line consistent-return
+const getOneSlides = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!id || !Number(id)) throw new Error('Invalid Id');
+    const slide = await Slides.findByPk(Number(id));
+    if (!slide) return res.status(404).json({ message: 'Not Found' });
+    res.json({ slide });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
-  getSlides, deleteSlide,
+  getSlides, deleteSlide, getOneSlides,
 };
