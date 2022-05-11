@@ -254,6 +254,30 @@ var assert = chai.assert;
 
 //* Passed test
 
+//*SIGNUP
+describe('Signup new user', () => { 
+
+    let newUser={
+        email: 'newUser@gmail.com',
+        firstName:"Tadeo",
+        lastName: 'Gavensky'
+    }
+
+    it('should add new suer to db', (done) => {
+        chai
+            .request(app)
+            .post("/users/auth/signup")
+            .send(newUser)
+            .end((err, res) => {
+                console.log('res.body', res.body)
+                res.should.have.status(200);
+                done();
+            });
+
+    });
+   
+ })
+
 //*GET USERS
 describe("Fetch all users", () => {
     it('SHOULD fetch all users after getting token and send GET request', () => {
