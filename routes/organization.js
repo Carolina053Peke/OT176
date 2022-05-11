@@ -7,9 +7,9 @@ const organizationValidator = require('../validations/organizationValidator');
 const awsImageUploader = require('../utils/awsImageUploader');
 
 // Organization update
-router.post('/public', authAdmin, organizationValidator, awsImageUploader, organizationUpdate);
+/* router.post('/public', authAdmin, organizationValidator, awsImageUploader, organizationUpdate);
 
 router.post('/newOrg', [], create);
 router.get('/public', [], getData);
-
+ */
 module.exports = router;

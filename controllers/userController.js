@@ -29,7 +29,7 @@ const userController = {
       });
     }
     const {
-      firstName, lastName, email, image,
+      firstName, lastName, email, photo,
     } = req.body;
     const user = db.User.findByPk(req.params.id);
     if (user !== '') {
@@ -37,8 +37,8 @@ const userController = {
         {
           firstName,
           lastName,
-          email,
-          image,
+         /*  email,
+          photo, */
         },
         {
           where: {
@@ -150,7 +150,6 @@ const userController = {
   },
   getData: async (req, res) => {
     const { id } = await verifyToken(req.headers.token);
-    console.log('idToken', id)
 
     try {
       if (id) {
@@ -188,7 +187,7 @@ const userController = {
   },
   delete: async (req, res) => {
     const userId = Number(req.params.id);
-
+    console.log('userId', userId)
     try {
       const user = await db.User.findOne({
         where: {
@@ -199,11 +198,13 @@ const userController = {
 
       if (user) {
         console.log('userToDel', user);
-        await user.update({ is_deleted: true });
+        db.user.update({ is_deleted: true }).then(()=>{
+          res.json({
+            msg: 'The user has been soft-deleted',
+          });
+        })
 
-        res.json({
-          msg: 'The user has been soft-deleted',
-        });
+       
       } else {
         res.status(404).json({
           msg: `No users with id: ${userId}, were found !`,
