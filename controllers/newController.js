@@ -1,14 +1,13 @@
 const db = require('../models');
+const pagination = require('../utils/pagination');
 
 const newController = {
   // Find all news
   list: async (req, res, next) => {
+    const { limit, page } = req.query;
     try {
-      const news = await db.New.findAll({
-
-      });
-
-      return res.status(200).json({
+      const news = await pagination(db.New, {}, page, limit);
+      res.status(200).json({
         success: true,
         count: news.length,
         data: news,
