@@ -28,7 +28,7 @@ const newController = {
         name: req.body.name,
         content: req.body.content,
         image: req.body.image,
-        userId: req.user_id,
+        user_id: req.user_id,
         categoryId: req.body.categoryId,
         type: req.body.type,
       });
