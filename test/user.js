@@ -31,113 +31,149 @@ var assert = chai.assert;
 
 //! Failed Tests
 
-/* describe('This test all should fail', () => {
+describe('This test all should fail', () => {
 
+    //*SIGNUP
+    describe('Signup new user should fail because user already exists', () => {
 
+        let newUser = {
+            email: 'newUser@gmail.com',
+            firstName: "Tadeo",
+            lastName: 'Gavensky',
+            password: "Password12345"
+        }
 
-    describe('Should fail because ther is no token provided', () => {
+        it('should NOT add new suer to db', (done) => {
+            chai
+                .request(app)
+                .post("/users/auth/signup")
+                .send(newUser)
+                .end((err, res) => {
+                    console.log('res.body', res.body)
+                    res.should.have.status(200);
+                    res.body.should.be.a("object");
+                    res.body.data.should.have.property('msg').eq('User already exists')
+                    done();
+                });
 
-        it('SHOULD FAIL', done => {
-            describe('/GET USERS', () => {
+        });
+
+    })
+
+    describe('/POST Sign Up', function () {
+            it('singup should fail because is not passing express validations', done => {
+                let newUser = {
+                    firstName: 'Tadeo12344',
+                    lastName: 'Gavensky12121',
+                    email: 'tadeogavengmail.com',
+                    password: ''
+                }
+
+                this.timeout(20000);
                 chai
                     .request(app)
-                    .get("/users/list")
+                    .post("/users/auth/signup")
+                    .send(newUser)
                     .end((err, res) => {
-                        res.should.have.status(403);
+                        res.should.have.status(400);
                         res.body.should.be.a("object");
-                        res.body.should.have.property("data");
+                        res.body.errors.should.be.a('array')
                         done();
                     });
             })
-        })
-    })
+        }),
 
-       it('SHOULD FAIL because there is no user logged, therefor there is no token also', done => {
-           describe('/GET USER DATA', function()  {
-               chai
-                   .request(app)
-                   .get("/users/auth/me")
-                   .set({token: ''})
-                   .end((err, res) => {
-                       res.should.have.status(404);
-                       done();
-                   });
-           })
-       })
-
-       it('SHOULD FAIL because there is no user logged, therefor there is no token also and no ID provided to the query params', done => {
-           describe('/GET USER DATA', function() {
-               this.timeout(20000);
-               chai
-                   .request(app)
-                   .get("/users/auth/me")
-                   .end((err, res) => {
-                       res.should.have.status(404);
-                       done();
-                   });
-           })
-       })
-   
-    it('SHOULD FAIL because is not passing express validations', () => {
-        describe('/POST Sign Up', function () {
-                it('singup shuld fail', done => {
-                    let newUser = {
-                        firstName: 'Tadeo12344',
-                        lastName: 'Gavensky12121',
-                        email: 'tadeogavengmail.com',
-                        password: ''
-                    }
-
-                    this.timeout(20000);
+        //* GET USERS
+        describe('GET USERS IN DB', () => {
+            it('SHOULD FAIL', done => {
+                describe('/GET USERS', () => {
                     chai
                         .request(app)
-                        .post("/users/auth/signup")
-                        .send(newUser)
+                        .get("/users/list")
                         .end((err, res) => {
-                            res.should.have.status(400);
+                            res.should.have.status(404);
                             res.body.should.be.a("object");
-                            res.body.errors.should.be.a('array')
-                            done();
-                        });
-                })
-            }),
-            describe('/POST Log in', function () {
-                it('login shuld fail', done => {
-                    this.timeout(20000);
-                    let failedUser = {
-                        email: "testtest.com",
-                        password: "123"
-                    }
-                    chai
-                        .request(app)
-                        .post("/users/auth/login")
-                        .send(failedUser)
-                        .end((err, res) => {
-                            res.should.have.status(400);
-                            res.body.should.be.a("object");
-                            res.body.errors.should.be.a('array')
+                            res.body.should.have.property("data");
                             done();
                         });
                 })
             })
+        })
+
+    //* GET USER DATA
+    it('SHOULD FAIL because there is no user logged', done => {
+        describe('/GET USER DATA', function () {
+            chai
+                .request(app)
+                .get("/users/auth/me")
+                .set({
+                    Authorization: `Bearer ${token}`
+                })
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    done();
+                });
+        })
     })
+
+    //* LOGIN
+    describe('/POST Log in', function () {
+        it('login should fail because is not passing express validations', done => {
+            this.timeout(20000);
+            let failedUser = {
+                email: "testtest.com",
+                password: "123"
+            }
+            chai
+                .request(app)
+                .post("/users/auth/login")
+                .send(failedUser)
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.be.a("object");
+                    res.body.errors.should.be.a('array')
+                    done();
+                });
+        })
+    })
+
+
+    describe('/POST Log in', function () {
+        it('login should fail because user does not exists', done => {
+            this.timeout(20000);
+            let failedUser = {
+                email: "test12121212121212121@test.com",
+                password: "123"
+            }
+            chai
+                .request(app)
+                .post("/users/auth/login")
+                .send(failedUser)
+                .end((err, res) => {
+                    console.log('res.body', res.body)
+                    res.should.have.status(200);
+                    done();
+                });
+        })
+    })
+
 
     it('SHOULD FAIL because', () => {
         describe('/POST AWS Image, not authorization', () => {
             it('uploading image should fail', () => {
-                beforeEach(done => {
-                    chai
-                        .request(app)
-                        .post("/users/auth/login")
-                        .send(guestUser)
-                        .end((err, res) => {
-                            res.should.have.status(200);
-                            token = res.body.token
-                            res.body.should.be.a("object");
-                            done();
-                        });
-                })
-                afterEach('should fail', done => {
+
+                chai
+                    .request(app)
+                    .post("/users/auth/login")
+                    .send(guestUser)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        token = res.body.token
+                        res.body.should.be.a("object");
+                        done();
+                    });
+
+                it('should fail', done => {
                     let image = 'image.png'
                     chai
                         .request(app)
@@ -222,24 +258,22 @@ var assert = chai.assert;
         })
     })
 
-    
-        describe('/PUT Delete, not user logged, so ID is undefined', () => {
-            it('deleting user should fail', done => {
-                chai
-                    .request(app)
-                    .put("/users/delete/" + id)
-                    .end((err, res) => {
-                        res.should.have.status(500);
-                        res.body.should.be.a('object').have.property('msg').eq('Pelase contact the administrator')
-                        done();
-                    });
-            })
+
+    describe('/PUT Delete, not user logged, so ID is undefined', () => {
+        it('deleting user should fail', done => {
+            chai
+                .request(app)
+                .put("/users/delete/" + id)
+                .end((err, res) => {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object').have.property('msg').eq('Pelase contact the administrator')
+                    done();
+                });
         })
-
-
-
+    })
 })
- */
+
+
 //! End of failed test
 
 
@@ -255,15 +289,15 @@ var assert = chai.assert;
 //* Passed test
 
 //*SIGNUP
-describe('Signup new user', () => { 
+describe('Signup new user', () => {
 
-    let newUser={
-        email: 'newUser@gmail.com',
-        firstName:"Tadeo",
-        lastName: 'Gavensky'
+    let newUser = {
+        email: 'newUserRRRRRRRR@gmail.com',
+        firstName: "Tadeo",
+        lastName: 'Gavensky',
     }
 
-    it('should add new suer to db', (done) => {
+    it('should add new user to db', (done) => {
         chai
             .request(app)
             .post("/users/auth/signup")
@@ -275,8 +309,8 @@ describe('Signup new user', () => {
             });
 
     });
-   
- })
+
+})
 
 //*GET USERS
 describe("Fetch all users", () => {
@@ -343,7 +377,7 @@ describe("Fetch logged user data ", () => {
                     .request(app)
                     .get("/users/auth/me")
                     .set({
-                        'token': token
+                        Authorization: `Bearer ${token}`
                     })
 
                     .end((err, res) => {
@@ -388,7 +422,7 @@ describe("Update user data ", () => {
 
                 chai
                     .request(app)
-                    .put("/users/edit/" + id)
+                    .patch("/users/" + id)
                     .set({
                         Authorization: `Bearer ${token}`
                     })
@@ -455,35 +489,35 @@ describe("Delete user", () => {
 describe('/POST AWS Image,', () => {
     it('login as admin', (done) => {
 
-        chai
-            .request(app)
-            .post("/users/auth/login")
-            .send(adminUser)
-            .end((err, res) => {
-                console.log('resAdmin', res.body)
-                res.should.have.status(200);
-                token = res.body.token
-                res.body.should.be.a("object");
-                done();
-            });
-    }),
-    it('should upload image', (done) => {
-        let image = '../img/image.jpg'
-        chai
-            .request(app)
-            .post("/users/auth/awsImgUpload")
-            .set({
-                Authorization: `Bearer ${token}`,
-                token:token
-            })
-            .attach(image)
-            .send()
-            .end((err, res) => {
-                console.log('resAws', res.body)
-                res.should.have.status(200);
-                res.body.should.be.a("object");
-                done();
-            });
-    })
+            chai
+                .request(app)
+                .post("/users/auth/login")
+                .send(adminUser)
+                .end((err, res) => {
+                    console.log('resAdmin', res.body)
+                    res.should.have.status(200);
+                    token = res.body.token
+                    res.body.should.be.a("object");
+                    done();
+                });
+        }),
+        it('should upload image', (done) => {
+            let image = '../img/image.jpg'
+            chai
+                .request(app)
+                .post("/users/auth/awsImgUpload")
+                .set({
+                    Authorization: `Bearer ${token}`,
+                    token: token
+                })
+                .attach(image)
+                .send()
+                .end((err, res) => {
+                    console.log('resAws', res.body)
+                    res.should.have.status(200);
+                    res.body.should.be.a("object");
+                    done();
+                });
+        })
 
 })

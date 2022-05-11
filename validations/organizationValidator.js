@@ -4,15 +4,9 @@ module.exports = [
   body('name').notEmpty().withMessage('You must complete the name field').bail()
     .isString()
     .withMessage('The name must be a string'),
-<<<<<<< HEAD
-  body('address').isAlpha().withMessage('The name must be a string'),
-  body('phone').isAlpha().withMessage('The name must be a number'),
-  body('email').isAlpha().withMessage('You must complete the email field').bail()
-=======
   body('address').isString().withMessage('The name must be a string'),
   body('phone').isNumeric().withMessage('The name must be a number'),
   body('email').notEmpty().withMessage('You must complete the email field').bail()
->>>>>>> develop
     .isString()
     .withMessage('The email must be a string')
     .isEmail()
