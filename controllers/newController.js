@@ -1,5 +1,5 @@
 const db = require('../models');
-const pagination = require('../utils/pagination');
+const { pagination } = require('../utils/pagination');
 
 const newController = {
   // Find all news
