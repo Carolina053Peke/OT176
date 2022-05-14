@@ -15,6 +15,8 @@ const awsImageUploader = require('../utils/awsImageUploader');
 const userController = require('../controllers/userController');
 const userAuth = require('../middlewares/authenticated');
 const imageValidator = require('../validations/image');
+const authenticated = require('../middlewares/authenticated');
+const authOwnership = require('../middlewares/authOwnership');
 
 // User list
 router.get('/users', authAdmin, userList);
@@ -26,6 +28,6 @@ router.get('/auth/me', userValidation.authorizations.token, userController.getDa
 router.post('/auth/signup', userValidation.signup, signup);
 router.post('/auth/login', userValidation.login, login);
 router.post('/auth/awsImgUpload', authAdmin, upload, imageValidator, awsImageUploader);
-router.put('/delete/:id', userController.delete);
+router.delete('/:id', authenticated, authOwnership('User'), userController.delete);
 
 module.exports = router;
