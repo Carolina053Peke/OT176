@@ -26,4 +26,5 @@ module.exports = {
   jwtSecret: process.env.JWT_SECRET,
   sendgridKey: process.env.SENGRID_KEY,
   sendgridVerified: process.env.SENGRID_VERIFIED,
+  baseUrl: `http://localhost:${process.env.PORT || '3000'}`,
 };
