@@ -28,40 +28,40 @@ const socialMediaTest = {
   instagramUrl: 'igTest.com',
 };
 
-before((done) => {
-  chai
-    .request(app)
-    .post('/users/auth/login')
-    .send(admin)
-    .end((err, res) => {
-      adminToken = res.body.token;
-    });
+// before((done) => {
+//   chai
+//     .request(app)
+//     .post('/users/auth/login')
+//     .send(admin)
+//     .end((err, res) => {
+//       adminToken = res.body.token;
+//     });
 
-  chai
-    .request(app)
-    .post('/users/auth/singup')
-    .send(regularUser)
-    .end((err, res) => {
-      userToken = res.body.token;
-    });
+//   chai
+//     .request(app)
+//     .post('/users/auth/singup')
+//     .send(regularUser)
+//     .end((err, res) => {
+//       userToken = res.body.token;
+//     });
 
-  chai
-    .request(app)
-    .post('/users/auth/login')
-    .send(regularUser)
-    .end((err, res) => {
-      userToken = res.body.token;
-    });
+//   chai
+//     .request(app)
+//     .post('/users/auth/login')
+//     .send(regularUser)
+//     .end((err, res) => {
+//       userToken = res.body.token;
+//     });
 
-  chai
-    .request(app)
-    .post('/members')
-    .send(socialMediaTest)
-    .end((err, res) => {
-      id = res.body.member.id;
-    });
-  done()
-});
+//   chai
+//     .request(app)
+//     .post('/members')
+//     .send(socialMediaTest)
+//     .end((err, res) => {
+//       id = res.body.member.id;
+//     });
+//   done()
+// });
 
 // Get Route
 

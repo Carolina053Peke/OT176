@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "test": "mocha",
+    "test:ong": "mocha --grep ong",
     "dev": "nodemon ./bin/www",
     "lint": "eslint . --fix"
   },
