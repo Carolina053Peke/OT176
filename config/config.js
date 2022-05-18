@@ -8,6 +8,8 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'mysql',
+    db: 'sessions.db',
+    dir: './var/db',
   },
   test: {
     username: process.env.DB_USER,

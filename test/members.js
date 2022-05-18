@@ -10,7 +10,8 @@ const db = require('../models');
 
 chai.use(chaiHttp);
 
-let adminToken, userToken, id;
+let adminToken; let userToken; let
+  id;
 
 const admin = {
   email: 'test@test.com',
@@ -60,7 +61,7 @@ before((done) => {
     .end((err, res) => {
       id = res.body.member.id;
     });
-  done()
+  done();
 });
 
 // Get Route

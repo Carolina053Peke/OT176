@@ -1,39 +1,37 @@
-const chai = require('chai')
+const chai = require('chai');
 const chaiHttp = require('chai-http');
 const {
-    set
+  set,
 } = require('../app.js');
 const app = require('../app.js');
+
 chai.should();
-chai.use(chaiHttp)
+chai.use(chaiHttp);
 
-let adminUser = {
-    email: "test@test.com",
-    password: "123"
+const adminUser = {
+  email: 'test@test.com',
+  password: '123',
 };
 
-
-let guestUser = {
-    email: "testGuest@gmail.com",
-    password: "123"
+const guestUser = {
+  email: 'testGuest@gmail.com',
+  password: '123',
 };
 
-let propUser = {
-    email: "propUser@gmail.com",
-    password: "Password123"
-}
+const propUser = {
+  email: 'propUser@gmail.com',
+  password: 'Password123',
+};
 
 let token;
 
-let id = undefined
+let id;
 
-var assert = chai.assert;
+const { assert } = chai;
 
 //! Failed Tests
 
 /* describe('This test all should fail', () => {
-
-
 
     describe('Should fail because ther is no token provided', () => {
 
@@ -77,7 +75,7 @@ var assert = chai.assert;
                    });
            })
        })
-   
+
     it('SHOULD FAIL because is not passing express validations', () => {
         describe('/POST Sign Up', function () {
                 it('singup shuld fail', done => {
@@ -222,7 +220,6 @@ var assert = chai.assert;
         })
     })
 
-    
         describe('/PUT Delete, not user logged, so ID is undefined', () => {
             it('deleting user should fail', done => {
                 chai
@@ -236,230 +233,205 @@ var assert = chai.assert;
             })
         })
 
-
-
 })
  */
 //! End of failed test
 
-
-
-
-
-
-
-
-
-
-
 //* Passed test
 
-//*GET USERS
-describe("Fetch all users", () => {
-    it('SHOULD fetch all users after getting token and send GET request', () => {
-        describe("/get token", () => {
-            it('It should get token', (done) => {
-                chai
-                    .request(app)
-                    .post("/users/auth/login")
-                    .send(adminUser)
-                    .end((err, res) => {
-                        token = res.body.token;
-                        res.should.have.status(200);
-                        done();
-                    });
-
-            });
-        });
-        describe("/get users", () => {
-            it("should fetch all users successfully", done => {
-                console.log('token', token)
-                chai
-                    .request(app)
-                    .get("/users/list")
-                    .set({
-                        Authorization: `Bearer ${token}`
-                    })
-                    .end((err, res) => {
-                        console.log('AllUsers', res.body.data)
-                        res.should.have.status(200);
-                        res.body.should.be.a("object");
-                        res.body.should.have.property("data");
-                        done();
-                    });
-            });
-        });
-
-    })
-});
-
-
-//*GET USER DATA
-describe("Fetch logged user data ", () => {
-    it('should fetch user data after getting token and send GET request', () => {
-        describe("/get token", () => {
-            it('It should get token', () => {
-                beforeEach(done => {
-                    chai
-                        .request(app)
-                        .post("/users/auth/login")
-                        .send(adminUser)
-                        .end((err, res) => {
-                            token = res.body.token;
-                            console.log('token', token)
-                            res.should.have.status(200);
-                            done();
-                        });
-                });
-            });
-        });
-        describe("/get user data", () => {
-            it("should fetch user data successfully", done => {
-                chai
-                    .request(app)
-                    .get("/users/auth/me")
-                    .set({
-                        'token': token
-                    })
-
-                    .end((err, res) => {
-                        res.should.have.status(200);
-                        res.body.should.be.a("object");
-                        res.body.should.have.property("msg");
-                        console.log('body', res.body.msg)
-                        done();
-                    });
-            });
-        });
-
-    })
-});
-
-//*UPDATE USER
-describe("Update user data ", () => {
-    it('should update user data after getting token and send PUT request', () => {
-
-        describe("/get token", () => {
-            it('It should get token', (done) => {
-                chai
-                    .request(app)
-                    .post("/users/auth/login")
-                    .send(propUser)
-                    .end((err, res) => {
-                        console.log('tokenOfGuest', res.body.token)
-                        token = res.body.token;
-                        id = res.body.user.id;
-
-                        res.should.have.status(200);
-                        done();
-                    });
-            });
-        });
-        describe("/update user data", () => {
-            it("should update user data successfully", done => {
-                const newUserData = {
-                    firstName: 'updated',
-                    lastName: 'updated',
-                }
-
-                chai
-                    .request(app)
-                    .put("/users/edit/" + id)
-                    .set({
-                        Authorization: `Bearer ${token}`
-                    })
-                    .field('firstName', newUserData.firstName)
-                    .field('lastName', newUserData.lastName)
-                    .end((err, res) => {
-                        console.log('resUpdate', res.body)
-                        res.should.have.status(200);
-                        res.body.should.have.property("message").eq('User updated successfully!')
-                        res.body.should.be.a("object");
-                        res.body.should.have.property("data");
-                        done();
-                    });
-            });
-        });
-
-    })
-});
-
-//DELETE USER
-describe("Delete user", () => {
-    it('should delete user after getting token and send PUT request', () => {
-
-        describe("/get token", () => {
-            it('It should get token', (done) => {
-
-                chai
-                    .request(app)
-                    .post("/users/auth/login")
-                    .send(guestUser)
-                    .end((err, res) => {
-                        token = res.body.token;
-                        id = res.body.user.id;
-                        res.should.have.status(200);
-                        done();
-                    });
-
-            });
-        });
-        describe("/delete user", () => {
-            it("should delete user data successfully", done => {
-
-                console.log('tokenDelete', token)
-                chai
-                    .request(app)
-                    .put("/users/delete/" + id)
-                    .set({
-                        Authorization: `Bearer ${token}`
-                    })
-                    .end((err, res) => {
-                        console.log('res', res.body)
-                        res.should.have.status(200);
-                        res.body.should.be.a("object");
-                        res.body.should.have.property("msg").eq('The user has been soft-deleted');
-                        done();
-                    });
-            });
-        });
-
-    })
-});
-
-//*Uploading Image
-describe('/POST AWS Image,', () => {
-    it('login as admin', (done) => {
-
+//* GET USERS
+describe('Fetch all users', () => {
+  it('SHOULD fetch all users after getting token and send GET request', () => {
+    describe('/get token', () => {
+      it('It should get token', (done) => {
         chai
+          .request(app)
+          .post('/users/auth/login')
+          .send(adminUser)
+          .end((err, res) => {
+            token = res.body.token;
+            res.should.have.status(200);
+            done();
+          });
+      });
+    });
+    describe('/get users', () => {
+      it('should fetch all users successfully', (done) => {
+        console.log('token', token);
+        chai
+          .request(app)
+          .get('/users/list')
+          .set({
+            Authorization: `Bearer ${token}`,
+          })
+          .end((err, res) => {
+            console.log('AllUsers', res.body.data);
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('data');
+            done();
+          });
+      });
+    });
+  });
+});
+
+//* GET USER DATA
+describe('Fetch logged user data ', () => {
+  it('should fetch user data after getting token and send GET request', () => {
+    describe('/get token', () => {
+      it('It should get token', () => {
+        beforeEach((done) => {
+          chai
             .request(app)
-            .post("/users/auth/login")
+            .post('/users/auth/login')
             .send(adminUser)
             .end((err, res) => {
-                console.log('resAdmin', res.body)
-                res.should.have.status(200);
-                token = res.body.token
-                res.body.should.be.a("object");
-                done();
+              token = res.body.token;
+              console.log('token', token);
+              res.should.have.status(200);
+              done();
             });
-    }),
-    it('should upload image', (done) => {
-        let image = '../img/image.jpg'
+        });
+      });
+    });
+    describe('/get user data', () => {
+      it('should fetch user data successfully', (done) => {
         chai
-            .request(app)
-            .post("/users/auth/awsImgUpload")
-            .set({
-                Authorization: `Bearer ${token}`,
-                token:token
-            })
-            .attach(image)
-            .send()
-            .end((err, res) => {
-                console.log('resAws', res.body)
-                res.should.have.status(200);
-                res.body.should.be.a("object");
-                done();
-            });
-    })
+          .request(app)
+          .get('/users/auth/me')
+          .set({
+            token,
+          })
 
-})
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('msg');
+            console.log('body', res.body.msg);
+            done();
+          });
+      });
+    });
+  });
+});
+
+//* UPDATE USER
+describe('Update user data ', () => {
+  it('should update user data after getting token and send PUT request', () => {
+    describe('/get token', () => {
+      it('It should get token', (done) => {
+        chai
+          .request(app)
+          .post('/users/auth/login')
+          .send(propUser)
+          .end((err, res) => {
+            console.log('tokenOfGuest', res.body.token);
+            token = res.body.token;
+            id = res.body.user.id;
+
+            res.should.have.status(200);
+            done();
+          });
+      });
+    });
+    describe('/update user data', () => {
+      it('should update user data successfully', (done) => {
+        const newUserData = {
+          firstName: 'updated',
+          lastName: 'updated',
+        };
+
+        chai
+          .request(app)
+          .put(`/users/edit/${id}`)
+          .set({
+            Authorization: `Bearer ${token}`,
+          })
+          .field('firstName', newUserData.firstName)
+          .field('lastName', newUserData.lastName)
+          .end((err, res) => {
+            console.log('resUpdate', res.body);
+            res.should.have.status(200);
+            res.body.should.have.property('message').eq('User updated successfully!');
+            res.body.should.be.a('object');
+            res.body.should.have.property('data');
+            done();
+          });
+      });
+    });
+  });
+});
+
+// DELETE USER
+describe('Delete user', () => {
+  it('should delete user after getting token and send PUT request', () => {
+    describe('/get token', () => {
+      it('It should get token', (done) => {
+        chai
+          .request(app)
+          .post('/users/auth/login')
+          .send(guestUser)
+          .end((err, res) => {
+            token = res.body.token;
+            id = res.body.user.id;
+            res.should.have.status(200);
+            done();
+          });
+      });
+    });
+    describe('/delete user', () => {
+      it('should delete user data successfully', (done) => {
+        console.log('tokenDelete', token);
+        chai
+          .request(app)
+          .put(`/users/delete/${id}`)
+          .set({
+            Authorization: `Bearer ${token}`,
+          })
+          .end((err, res) => {
+            console.log('res', res.body);
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('msg').eq('The user has been soft-deleted');
+            done();
+          });
+      });
+    });
+  });
+});
+
+//* Uploading Image
+describe('/POST AWS Image,', () => {
+  it('login as admin', (done) => {
+    chai
+      .request(app)
+      .post('/users/auth/login')
+      .send(adminUser)
+      .end((err, res) => {
+        console.log('resAdmin', res.body);
+        res.should.have.status(200);
+        token = res.body.token;
+        res.body.should.be.a('object');
+        done();
+      });
+  }),
+  it('should upload image', (done) => {
+    const image = '../img/image.jpg';
+    chai
+      .request(app)
+      .post('/users/auth/awsImgUpload')
+      .set({
+        Authorization: `Bearer ${token}`,
+        token,
+      })
+      .attach(image)
+      .send()
+      .end((err, res) => {
+        console.log('resAws', res.body);
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        done();
+      });
+  });
+});
