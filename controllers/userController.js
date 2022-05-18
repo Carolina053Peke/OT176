@@ -107,34 +107,6 @@ const userController = {
     })
       .catch((err) => res.status(500).json(err));
   },
-  userDelete: async (req, res) => {
-    const userId = Number(req.params.id);
-    try {
-      const user = await db.User.findOne({
-        where: {
-          id: userId,
-          is_deleted: false,
-        },
-      });
-
-      if (user) {
-        console.log('userToDel', user);
-        await user.update({ is_deleted: true });
-
-        res.json({
-          msg: 'The user has been soft-deleted',
-        });
-      } else {
-        res.status(404).json({
-          msg: `No users with id: ${userId}, were found !`,
-        });
-      }
-    } catch (error) {
-      return res.status(500).json({
-        msg: 'Pelase contact the administrator',
-      });
-    }
-  },
   // End User CRUD
   login: async (req, res) => {
     const errors = validationResult(req);
@@ -211,7 +183,7 @@ const userController = {
     }
   },
 
-  delete: async (req, res) => {
+  userDelete: async (req, res) => {
     const userId = req.params.id;
     try {
       const user = await db.User.findOne({

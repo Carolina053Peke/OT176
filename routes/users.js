@@ -33,6 +33,6 @@ router.post('/auth/login', userValidation.login, login);
 
 router.post('/auth/awsImgUpload', authAdmin, upload, imageValidator, awsImageUploader);
 
-router.delete('/:id', authenticated, authOwnership('User'), userController.delete);
+router.delete('/:id', authenticated, authOwnership('User'), userDelete);
 
 module.exports = router;
