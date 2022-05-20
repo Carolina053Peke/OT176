@@ -227,7 +227,7 @@ const userController = {
   }),
 
   userInfo: (req, res) => {
-    res.status(200).send(`Logged in with ${req.user.email} account`);
+    res.status(200).send(`Logged in with ${req.user.email} account. /n App Token : ${req.token}`);
   },
 };
 
