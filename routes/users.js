@@ -8,7 +8,7 @@ const {
   login,
   userEdit,
   getData,
-  userDelete,
+  deleted,
 } = require('../controllers/userController');
 const userValidation = require('../validations/user');
 const upload = require('../utils/multer');
@@ -21,7 +21,7 @@ const authOwnership = require('../middlewares/authOwnership');
 // User list
 router.get('/users', authAdmin, userList);
 // User edit
-router.patch('/users/:id', userAuth, userValidation.signup, imageValidator, awsImageUploader, userEdit);
+router.patch('/users/:id', userAuth, userValidation.signup, userEdit);
 // User get data
 router.get('/auth/me', getData);
 // User register
@@ -31,8 +31,4 @@ router.post('/auth/login', userValidation.login, login);
 // User delete
 //router.put('/delete/:id', userDelete);
 
-router.post('/auth/awsImgUpload', authAdmin, upload, imageValidator, awsImageUploader);
-
-router.delete('/:id', authenticated, authOwnership('User'), userController.delete);
-
-module.exports = router;
+router.post('/auth/awsImgUpload', authAdmin);

@@ -60,7 +60,7 @@ before((done) => {
     .end((err, res) => {
       id = res.body.member.id;
     });
-  done()
+  done();
 });
 
 // Get Route
@@ -183,7 +183,10 @@ describe('Member endpoints', () => {
           chai
             .request(app)
             .delete(`/members/${Number(id) + 1}`)
-            .end();
+            .end((err, res) => {
+              expect(res).to.have.status(200);
+              done();
+            });
         });
         chai
           .request(app)
@@ -192,8 +195,8 @@ describe('Member endpoints', () => {
           .end((err, res) => {
             expect(res).to.have.status(200);
             expect(res).to.be.json;
+            done();
           });
-        done();
       });
     });
   });

@@ -27,9 +27,7 @@ const userController = {
         errors: errors.array(),
       });
     } else {
-      const {
-        firstName, lastName, email, image,
-      } = req.body;
+      const { firstName, lastName, email, image } = req.body;
       const user = db.User.findByPk(req.params.id);
       if (user !== '') {
         db.User.update(
@@ -43,7 +41,7 @@ const userController = {
             where: {
               id: req.params.id,
             },
-          },
+          }
         )
           .then((result) => {
             const response = {
@@ -76,35 +74,42 @@ const userController = {
       where: {
         email: req.body.email,
       },
-    }).then((possibleUser) => {
-      if (possibleUser) {
-        res.status(409).json({ msg: 'User already exists' });
-      } else {
-        db.User.create({
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email,
-          password: bcrypt.hashSync(req.body.password, 10),
-        }).then(async (user) => {
-          const token = await createToken(user.id);
-          res.header('Authorization', `Bearer ${token}`);
-          await sendMail(user.email, template.subject, template.html).then(() => {
-            const response = {
-              message: 'Account created successfully! Check your email spam box!',
-              data: {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-              },
-            };
-            return res.json(response);
-          }).catch((err) => res.status(500).json({
-            msg: `Please contact the administrator, Error: ${err.message}`,
-          }));
-        })
-          .catch((err) => res.status(500).json(err));
-      }
     })
+      .then((possibleUser) => {
+        if (possibleUser) {
+          res.status(409).json({ msg: 'User already exists' });
+        } else {
+          db.User.create({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: bcrypt.hashSync(req.body.password, 10),
+          })
+            .then(async (user) => {
+              const token = await createToken(user.id);
+              res.header('Authorization', `Bearer ${token}`);
+              await sendMail(user.email, template.subject, template.html)
+                .then(() => {
+                  const response = {
+                    message:
+                      'Account created successfully! Check your email spam box!',
+                    data: {
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                      email: user.email,
+                    },
+                  };
+                  return res.json(response);
+                })
+                .catch((err) =>
+                  res.status(500).json({
+                    msg: `Please contact the administrator, Error: ${err.message}`,
+                  })
+                );
+            })
+            .catch((err) => res.status(500).json(err));
+        }
+      })
       .catch((err) => res.status(500).json(err));
   },
   userDelete: async (req, res) => {
@@ -184,9 +189,7 @@ const userController = {
           },
         });
 
-        const {
-          firstName, lastName, email, image, roleId,
-        } = user;
+        const { firstName, lastName, email, image, roleId } = user;
 
         if (user) {
           res.status(200).json({
@@ -211,7 +214,7 @@ const userController = {
     }
   },
 
-  delete: async (req, res) => {
+  deleted: async (req, res) => {
     const userId = req.params.id;
     try {
       const user = await db.User.findOne({

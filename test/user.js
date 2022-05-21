@@ -1,8 +1,6 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const {
-  set,
-} = require('../app.js');
+const {} = require('../app.js');
 const app = require('../app.js');
 
 chai.should();
@@ -97,24 +95,24 @@ describe('This test all should fail', () => {
           });
       });
     }),
-    describe('/POST Log in fail because incorrect user email', () => {
-      it('Login should fail', (done) => {
-        const failedUser = {
-          email: 'testtest.com',
-          password: '123',
-        };
-        chai
-          .request(app)
-          .post('/users/auth/login')
-          .send(failedUser)
-          .end((err, res) => {
-            res.should.have.status(400);
-            res.body.should.be.a('object');
-            res.body.errors.should.be.a('array');
-            done();
-          });
+      describe('/POST Log in fail because incorrect user email', () => {
+        it('Login should fail', (done) => {
+          const failedUser = {
+            email: 'testtest.com',
+            password: '123',
+          };
+          chai
+            .request(app)
+            .post('/users/auth/login')
+            .send(failedUser)
+            .end((err, res) => {
+              res.should.have.status(400);
+              res.body.should.be.a('object');
+              res.body.errors.should.be.a('array');
+              done();
+            });
+        });
       });
-    });
   });
 
   describe('/DELETE, not user logged, so ID is undefined', () => {
@@ -123,8 +121,11 @@ describe('This test all should fail', () => {
         .request(app)
         .put(`/users/delete/${id}`)
         .end((err, res) => {
-          res.should.have.status(500);
-          res.body.should.be.a('object').have.property('msg').eq('Pelase contact the administrator');
+          res.should.have.status(404);
+          res.body.should.be
+            .a('object')
+            .have.property('msg')
+            .eq('Pelase contact the administrator');
           done();
         });
     });
@@ -211,7 +212,6 @@ describe('SHOULD CREATE A NEW USER', () => {
         lastName: 'Gavensky',
         email: 'tadeogaven@gmail.com',
         password: 'Password123',
-
       };
 
       chai
@@ -264,7 +264,9 @@ describe('Update user data ', () => {
 
           .end((err, res) => {
             res.should.have.status(200);
-            res.body.should.have.property('message').eq('User updated successfully!');
+            res.body.should.have
+              .property('message')
+              .eq('User updated successfully!');
             res.body.should.be.a('object');
             res.body.should.have.property('data');
             done();
@@ -304,7 +306,9 @@ describe('Delete user', () => {
           .end((err, res) => {
             res.should.have.status(200);
             res.body.should.be.a('object');
-            res.body.should.have.property('msg').eq('The user has been soft-deleted');
+            res.body.should.have
+              .property('msg')
+              .eq('The user has been soft-deleted');
             done();
           });
       });
