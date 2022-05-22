@@ -113,13 +113,12 @@ const userController = {
       const user = await db.User.findOne({
         where: {
           id: userId,
-          is_deleted: false,
         },
       });
 
       if (user) {
         console.log('userToDel', user);
-        await user.update({ is_deleted: true });
+        await user.destroy();
 
         res.json({
           msg: 'The user has been soft-deleted',
