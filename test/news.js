@@ -39,10 +39,9 @@ describe('Testing  API NEWS', () => {
         done();
       });
   });
-  
+
   describe('ONG >> POST /news', () => {
     it('Should receive an object with the data of the new and a status 201', (done) => {
-      
       chai
         .request(app)
         .post('/news/')
@@ -54,9 +53,8 @@ describe('Testing  API NEWS', () => {
           done();
         });
     });
- 
+
     it('Should get a 403 error because you need to be authenticated with a valid token.', (done) => {
-      
       chai
         .request(app)
         .post('/news/')
@@ -66,7 +64,7 @@ describe('Testing  API NEWS', () => {
           done();
         });
     });
-  
+
     it('Should get a 400 error because you need send all fields', (done) => {
       chai
         .request(app)
@@ -78,7 +76,7 @@ describe('Testing  API NEWS', () => {
           done();
         });
     });
-  
+
     it('Should get a 400 error because image must be URL', (done) => {
       bodyNew.image = 'isnotUrl';
       chai
@@ -96,18 +94,18 @@ describe('Testing  API NEWS', () => {
     it('Should get a list with all news and status 200', (done) => {
       chai
         .request(app)
-        .get(`/news`)
+        .get('/news')
         .set({ Authorization: `Bearer ${token}` })
         .end((err, res) => {
           res.should.have.status(200);
           done();
         });
     });
-  
+
     it('Should get a status 200, when paging ex: ?page=2', (done) => {
       chai
         .request(app)
-        .get(`/news`)
+        .get('/news')
         .query({ page: '2', limit: '3' })
         .set({ Authorization: `Bearer ${token}` })
         .end((err, res) => {
@@ -115,10 +113,8 @@ describe('Testing  API NEWS', () => {
           done();
         });
     });
-  
-    it(`Should get the news details with id`, (done) => {
-      
 
+    it('Should get the news details with id', (done) => {
       chai
         .request(app)
         .get(`/news/${id}`)
@@ -128,9 +124,9 @@ describe('Testing  API NEWS', () => {
           done();
         });
     });
-  
+
     it('Should get error when id does not exist', (done) => {
-      let fake_id = 'as2';
+      const fake_id = 'as2';
 
       chai
         .request(app)
@@ -142,32 +138,18 @@ describe('Testing  API NEWS', () => {
         });
     });
   });
-  
-  describe('ONG >> GET /news', () => {
-    it('Should get a 400 error because image must be URL', (done) => {
-      
+
+  describe('Should receive an object with the data of the news updated a status 200', () => {
+    it('should status 200 ', (done) => {
+      bodyNew.content = 'This is a New Updated';
+      bodyNew.image = 'http://newUpdated.com';
       chai
         .request(app)
         .put(`/news/${id}`)
         .send(bodyNew)
         .set({ Authorization: `Bearer ${token}` })
         .end((err, res) => {
-          res.should.have.status(400);
-          done();
-        });
-    });
-  });
-  describe('Should receive an object with the data of the news updated a status 201', () => {
-    it('should status 201 ', (done) => {
-      bodyNew.content="This is a New Updated";
-      bodyNew.image="http://newUpdated.com";
-      chai
-        .request(app)
-        .put(`/news/${id}`)
-        .send(bodyNew)
-        .set({ Authorization: `Bearer ${token}` })
-        .end((err, res) => {
-          res.should.have.status(201);
+          res.should.have.status(200);
           done();
         });
     });
@@ -175,7 +157,6 @@ describe('Testing  API NEWS', () => {
 
   describe('ONG >> DELETE /news/{id}', () => {
     it('Should get a 200 status confirmation if you successfully delete an item', (done) => {
-      
       chai
         .request(app)
         .delete(`/news/${id}`)
@@ -186,6 +167,4 @@ describe('Testing  API NEWS', () => {
         });
     });
   });
-
-
 });
