@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const db = require('../models');
-const { Category } = require('../models');
+const { pagination } = require('../utils/paginate');
 
 const categoryController = {
   // Start Categories CRUD
@@ -27,26 +27,18 @@ const categoryController = {
       })
       .catch((error) => res.json(error));
   },
-  categoryList: async (req, res) => {
-    const { limit = 10, page = 0 } = req.query;
-    try {
-      const categories = await Category.findAndCountAll({
-        limit: +limit,
-        offset: limit * page,
+  categoryList: (req, res) => {
+    const { limit, page } = req.query;
+    db.Category.findAll({
+      attributes: ['name'],
+    })
+      .then(async (result) => {
+        const response = await pagination(db.Category, {}, page, limit);
+        res.json(response);
+      })
+      .catch((error) => {
+        res.json(error);
       });
-      const { count: totalItems, rows: results } = categories;
-      const totalPages = Math.ceil(totalItems / limit);
-      res.json({
-        prevPage: page <= 0 ? '' : +page - 1,
-        nextPage: page >= totalPages ? '' : +page + 1,
-        currentPage: page ? +page : 0,
-        totalPages,
-        totalItems,
-        results,
-      });
-    } catch (error) {
-      next(error);
-    }
   },
   categoryEdit: (req, res) => {
     const errors = validationResult(req);
@@ -88,16 +80,33 @@ const categoryController = {
         .catch((error) => res.json(error));
     }
   },
-  categoryDetail: async (req, res) => {
-    try {
-      const category = await Category.findByPk(req.params.id);
-      res.status(200).json(category);
-    } catch (error) {
-      next(error);
-    }
+  categoryDetail: (req, res) => {
+    db.Category.findByPk({
+      where: {
+        id: req.params.id,
+      },
+    })
+      .then((result) => {
+        if (result === null) {
+          const response = {
+            status: 404,
+            message: 'Category not found',
+            data: result,
+          };
+          res.json(response);
+        } else {
+          const response = {
+            status: 200,
+            message: 'OK',
+            data: result,
+          };
+          res.json(response);
+        }
+      })
+      .catch((error) => res.json(error));
   },
   categoryDelete: (req, res) => {
-    const category = db.Category.findByPk(req.params.id);
+    const category = db.findByPk(req.params.id);
     if (category === null) {
       const resolve = {
         status: 404,
