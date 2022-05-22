@@ -28,16 +28,16 @@ const userController = {
       });
     } else {
       const {
-        firstName, lastName, email, image,
+        firstName, lastName,
       } = req.body;
+
       const user = db.User.findByPk(req.params.id);
       if (user !== '') {
         db.User.update(
           {
             firstName,
             lastName,
-            email,
-            image,
+            photo: req.user.image,
           },
           {
             where: {
@@ -45,11 +45,10 @@ const userController = {
             },
           },
         )
-          .then((result) => {
+          .then(() => {
             const response = {
               status: 200,
               message: 'User updated successfully!',
-              data: result,
             };
             res.json(response);
           })
