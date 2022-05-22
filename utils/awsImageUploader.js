@@ -33,7 +33,7 @@ const uploadImg = async (req, res, next) => {
       ContentType: 'image/jpeg',
     };
 
-    const image = s3.upload(params, req, (error, data) => {});
+    const image = await s3.upload(params, (error, data) => {});
 
     req.user.image = `https://${params.Bucket}.s3.amazonaws.com/${image.singlePart.params.Key}`;
     next();
