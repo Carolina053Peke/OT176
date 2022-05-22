@@ -2,6 +2,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const generator = require('generate-password');
+const bcrypt = require('bcryptjs');
 
 const { User } = require('../models');
 const { createToken } = require('./jwt');
@@ -21,6 +22,8 @@ passport.use(new GoogleStrategy(
       symbols: true,
     });
 
+    const pwEncrypted = await bcrypt.hashSync(password, 10);
+
     const user = await User.findOrCreate({
       where: {
         email: profile.email,
@@ -28,11 +31,14 @@ passport.use(new GoogleStrategy(
       defaults: {
         firstName: profile.given_name,
         lastName: profile.family_name,
-        password: password,
-      }
+        password: pwEncrypted,
+        roleId: 1,
+      },
     });
-    profile.token = await createToken(profile.id);
     
+    profile.token = await createToken(profile.id);
+    profile.password= pwEncrypted;
+
     return done(null, profile);
   }),
 ));
