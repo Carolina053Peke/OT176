@@ -1,5 +1,3 @@
-'use stricts';
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { expect } = require('chai');
@@ -9,9 +7,13 @@ const server = require('../app');
 chai.should();
 chai.use(chaiHttp);
 
-const credentials = { email: 'test@test.com', password: '1234' }; // user admin
+const credentials = {
+  email: process.env.ADMIN_EMAIL,
+  password: process.env.ADMIN_PASSWORD,
+}; // user admin
 let token = ''; // token jwt
 let ide = ''; // id of new post
+
 const dataTestimonial = {
   name: 'Testimonial title 1',
   image: 'https://imagendeejemplo.com/image.jpg',
@@ -24,7 +26,7 @@ describe('ONG >> POST /auth/login', () => {
       .request(server)
       .post('/users/auth/login')
       .send(credentials)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res).to.have.status(200);
         expect(res.body).to.have.property('user');
         expect(res.body).to.have.property('token');
@@ -40,7 +42,7 @@ describe('ONG >> POST /testimonials/', () => {
       .request(server)
       .post('/testimonials')
       .send(dataTestimonial)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res).to.have.status(403);
         done();
       });
@@ -52,7 +54,7 @@ describe('ONG >> POST /testimonials/', () => {
       .post('/testimonials')
       .auth(token, { type: 'bearer' })
       .send(dataTestimonial)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res).to.have.status(201);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('testimonial');
@@ -68,7 +70,7 @@ describe('ONG >> GET /testimonials/ ', () => {
       .request(server)
       .get('/testimonials')
       .auth(token, { type: 'bearer' })
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res).to.have.status(200);
         expect(res.body).to.be.a('object');
         expect(res.body).to.have.property('results');
@@ -80,8 +82,7 @@ describe('ONG >> GET /testimonials/ ', () => {
             .to.have.property('name')
             .to.be.a('string');
           expect(testimonial)
-            .to.have.property('image')
-            .to.be.a('string');
+            .to.have.property('image'); // becouse is optional
           expect(testimonial)
             .to.have.property('content')
             .to.be.a('string');
@@ -94,7 +95,7 @@ describe('ONG >> GET /testimonials/ ', () => {
     const req = chai.request(server).get('/testimonials')
       .query({ page: '2', limit: '3' })
       .auth(token, { type: 'bearer' })
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(req).to.have.param('page', '2');
         expect(res).to.have.status(200);
         expect(res.body).to.be.a('object');
@@ -112,7 +113,7 @@ describe('ONG >> PUT /testimonials/{id}', () => {
       .request(server)
       .put('/testimonials/10a0')
       .auth(token, { type: 'bearer' })
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res).to.have.status(500);
         expect(res.text).to.includes('Item not found');
         done();
@@ -125,7 +126,7 @@ describe('ONG >> PUT /testimonials/{id}', () => {
       .put(`/testimonials/${ide}`)
       .auth(token, { type: 'bearer' })
       .send({ name: 'Update Name' })
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res).to.have.status(200);
         done();
       });
@@ -138,7 +139,7 @@ describe('ONG >> DELETE /testimonials/{id}', () => {
       .request(server)
       .delete(`/testimonials/${ide}`)
       .auth(token, { type: 'bearer' })
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res).to.have.status(200);
         expect(res.body).to.have.property('message');
         expect(res.body.message).to.includes('Delete Success');
