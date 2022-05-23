@@ -16,7 +16,7 @@ const uploadImg = async (req, res, next) => {
         errors: errors.array(),
       });
     }
-    if (req.file) {
+    if (!req.file) return next();
       const myFile = await req.file.originalname.split('.');
       console.log('myFile', myFile);
       const fileType = await myFile[myFile.length - 1];
@@ -38,9 +38,6 @@ const uploadImg = async (req, res, next) => {
 
       req.user.image = `https://${params.Bucket}.s3.amazonaws.com/${image.singlePart.params.Key}`;
       next();
-    } else {
-      next();
-    }
   } catch (error) {
     console.log('error', error);
   }
