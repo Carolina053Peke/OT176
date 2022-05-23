@@ -82,7 +82,7 @@ describe('ONG >> GET /testimonials/ ', () => {
             .to.have.property('name')
             .to.be.a('string');
           expect(testimonial)
-            .to.have.property('image'); // becouse is optional
+            .to.have.property('image'); // is optional
           expect(testimonial)
             .to.have.property('content')
             .to.be.a('string');
