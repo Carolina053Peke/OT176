@@ -9,6 +9,7 @@ const storage = multer.memoryStorage({
 
 const limits = { fileSize: 1024 * 1024 * 5 };
 const fileFilter = (req, file, callback) => {
+  if (!file) return callback(null, false);
   const filetypes = /jpeg|jpg|png/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);

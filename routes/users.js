@@ -14,7 +14,6 @@ const userValidation = require('../validations/user');
 const upload = require('../utils/multer');
 const awsImageUploader = require('../utils/awsImageUploader');
 const userAuth = require('../middlewares/authenticated');
-const imageValidator = require('../validations/image');
 const authenticated = require('../middlewares/authenticated');
 const authOwnership = require('../middlewares/authOwnership');
 
@@ -22,7 +21,7 @@ const authOwnership = require('../middlewares/authOwnership');
 router.get('/users', authAdmin, userList);
 
 // User edit
-router.patch('/users/:id', userAuth, upload('image'), imageValidator, awsImageUploader, userEdit);
+router.patch('/users/:id', userAuth, upload(), awsImageUploader, userEdit);
 
 // User get data
 router.get('/auth/me', authenticated, getData);
