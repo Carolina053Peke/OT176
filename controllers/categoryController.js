@@ -59,15 +59,18 @@ const categoryController = {
       res.json(response);
     } else {
       const { name, description, image } = req.body;
-      db.Category.update({
-        name,
-        description,
-        image,
-      }, {
-        where: {
-          id: req.params.id,
+      db.Category.update(
+        {
+          name,
+          description,
+          image,
         },
-      })
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      )
         .then((result) => {
           const response = {
             status: 200,

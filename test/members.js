@@ -60,7 +60,7 @@ before((done) => {
     .end((err, res) => {
       id = res.body.member.id;
     });
-  done()
+  done();
 });
 
 // Get Route
