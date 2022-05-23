@@ -12,6 +12,8 @@ module.exports = {
           description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
           deletedAt: new Date(),
+          createdAt: '2020-12-01',
+          updatedAt: '2020-12-01',
         },
       ],
       {}

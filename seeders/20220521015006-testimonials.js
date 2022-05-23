@@ -5,11 +5,15 @@ module.exports = {
         name: 'John Doe',
         image: 'http://testimage.test/img.png',
         content: 'This is a Testing New',
+        createdAt: '2020-12-01',
+        updatedAt: '2020-12-01',
       },
       {
         name: 'John Doe',
         image: 'http://testimage.test/img.png',
         content: 'This is a Testing New',
+        createdAt: '2020-12-01',
+        updatedAt: '2020-12-01',
       },
     ]);
   },

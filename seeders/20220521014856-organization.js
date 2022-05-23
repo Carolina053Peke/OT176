@@ -15,6 +15,8 @@ module.exports = {
           facebook: 'https://www.facebook.com/john.doe',
           instagram: 'https://www.instagram.com/john.doe',
           linkedin: 'https://www.linkedin.com/john.doe',
+          createdAt: '2020-12-01',
+          updatedAt: '2020-12-01',
         },
       ],
       {}
