@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const db = require('../models');
+const { pagination } = require('../utils/paginate');
 
 const categoryController = {
   // Start Categories CRUD
@@ -27,15 +28,12 @@ const categoryController = {
       .catch((error) => res.json(error));
   },
   categoryList: (req, res) => {
+    const { limit, page } = req.query;
     db.Category.findAll({
       attributes: ['name'],
     })
-      .then((result) => {
-        const response = {
-          status: 200,
-          message: 'OK',
-          data: result,
-        };
+      .then(async (result) => {
+        const response = await pagination(db.Category, {}, page, limit);
         res.json(response);
       })
       .catch((error) => {
@@ -59,15 +57,18 @@ const categoryController = {
       res.json(response);
     } else {
       const { name, description, image } = req.body;
-      db.Category.update({
-        name,
-        description,
-        image,
-      }, {
-        where: {
-          id: req.params.id,
+      db.Category.update(
+        {
+          name,
+          description,
+          image,
         },
-      })
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      )
         .then((result) => {
           const response = {
             status: 200,

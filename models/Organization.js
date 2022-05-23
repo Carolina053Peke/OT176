@@ -9,45 +9,51 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Organization.hasMany(models.Slides, { as: 'slides', foreignKey: 'organizationId' });
+      Organization.hasMany(models.Slides, {
+        as: 'slides',
+        foreignKey: 'organizationId',
+      });
     }
   }
 
-  Organization.init({
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+  Organization.init(
+    {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      image: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      address: {
+        type: DataTypes.STRING,
+      },
+      phone: {
+        type: DataTypes.INTEGER,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      welcomeText: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      aboutUsText: {
+        type: DataTypes.TEXT,
+      },
+      deletedAt: DataTypes.DATE,
+      facebook: DataTypes.STRING,
+      instagram: DataTypes.STRING,
+      linkedin: DataTypes.STRING,
     },
-    image: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    address: {
-      type: DataTypes.STRING,
-    },
-    phone: {
-      type: DataTypes.INTEGER,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    welcomeText: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    aboutUsText: {
-      type: DataTypes.TEXT,
-    },
-    deletedAt: DataTypes.DATE,
-    facebook: DataTypes.STRING,
-    instagram: DataTypes.STRING,
-    linkedin: DataTypes.STRING,
-  }, {
-    sequelize,
-    modelName: 'Organization',
-    paranoid: true,
-    timestamps: true,
-  });
+    {
+      sequelize,
+      modelName: 'Organization',
+      paranoid: true,
+      timestamps: true,
+    }
+  );
   return Organization;
 };

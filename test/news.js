@@ -138,22 +138,8 @@ describe('Testing  API NEWS', () => {
         });
     });
   });
-
-  describe('ONG >> GET /news', () => {
-    it('Should get a 400 error because image must be URL', (done) => {
-      chai
-        .request(app)
-        .put(`/news/${id}`)
-        .send(bodyNew)
-        .set({ Authorization: `Bearer ${token}` })
-        .end((err, res) => {
-          res.should.have.status(400);
-          done();
-        });
-    });
-  });
-  describe('Should receive an object with the data of the news updated a status 201', () => {
-    it('should status 201 ', (done) => {
+  describe('Should receive an object with the data of the news updated a status 200', () => {
+    it('should status 200 ', (done) => {
       bodyNew.content = 'This is a New Updated';
       bodyNew.image = 'http://newUpdated.com';
       chai
@@ -162,7 +148,7 @@ describe('Testing  API NEWS', () => {
         .send(bodyNew)
         .set({ Authorization: `Bearer ${token}` })
         .end((err, res) => {
-          res.should.have.status(201);
+          res.should.have.status(200);
           done();
         });
     });

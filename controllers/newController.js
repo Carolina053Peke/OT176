@@ -60,7 +60,7 @@ const newController = {
 
       const newNews = await db.New.findByPk(req.params.id);
 
-      return res.status(201).json({
+      return res.status(200).json({
         success: true,
         data: { newNews },
       });
