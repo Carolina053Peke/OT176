@@ -20,19 +20,20 @@ const authOwnership = require('../middlewares/authOwnership');
 
 // User list
 router.get('/users', authAdmin, userList);
+
 // User edit
-router.patch('/users/:id', userAuth, userValidation.signup, imageValidator, awsImageUploader, userEdit);
+router.patch('/users/:id', userAuth, upload('image'), imageValidator, awsImageUploader, userEdit);
+
 // User get data
-router.get('/auth/me', getData);
+router.get('/auth/me', authenticated, getData);
+
 // User register
 router.post('/auth/signup', userValidation.signup, signup);
+
 // User login
 router.post('/auth/login', userValidation.login, login);
+
 // User delete
-//router.put('/delete/:id', userDelete);
-
-router.post('/auth/awsImgUpload', authAdmin, upload, imageValidator, awsImageUploader);
-
-router.delete('/:id', authenticated, authOwnership('User'), userController.delete);
+router.delete('/:id', authenticated, authOwnership('User'), userDelete);
 
 module.exports = router;

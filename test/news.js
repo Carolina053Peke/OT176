@@ -138,7 +138,6 @@ describe('Testing  API NEWS', () => {
         });
     });
   });
-
   describe('Should receive an object with the data of the news updated a status 200', () => {
     it('should status 200 ', (done) => {
       bodyNew.content = 'This is a New Updated';

@@ -8,7 +8,7 @@ const {
 // eslint-disable-next-line semi
 const s3 = require('./s3')
 
-const uploadImg = async (req, res) => {
+const uploadImg = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -33,17 +33,10 @@ const uploadImg = async (req, res) => {
       ContentType: 'image/jpeg',
     };
 
-    s3.upload(params, (error, data) => {
-      if (error) {
-        res.status(500).send(error);
-      }
-      const response = {
-        location: 'https://s3.console.aws.amazon.com/s3/buckets/ong-bucket-alkemy?region=us-east-1&tab=objects',
-        image: `https://${params.Bucket}.s3.amazonaws.com/${data.Key}`,
-        bucket: data.Bucket,
-      };
-      res.json(response);
-    });
+    const image = await s3.upload(params, (error, data) => {});
+
+    req.user.image = `https://${params.Bucket}.s3.amazonaws.com/${image.singlePart.params.Key}`;
+    next();
   } catch (error) {
     console.log('error', error);
   }

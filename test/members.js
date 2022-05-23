@@ -10,10 +10,11 @@ const db = require('../models');
 
 chai.use(chaiHttp);
 
-let adminToken, userToken, id;
+let adminToken; let userToken; let
+  id;
 
 const admin = {
-  email: 'test@test.com',
+  email: process.env.ADMIN_EMAIL,
   password: process.env.ADMIN_PASSWORD,
 };
 const regularUser = {
