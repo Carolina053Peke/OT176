@@ -18,8 +18,6 @@ const imageValidator = require('../validations/image');
 const authenticated = require('../middlewares/authenticated');
 const authOwnership = require('../middlewares/authOwnership');
 
-// router.use(express.json());
-
 // User list
 router.get('/users', authAdmin, userList);
 
@@ -27,7 +25,7 @@ router.get('/users', authAdmin, userList);
 router.patch('/users/:id', userAuth, upload('image'), imageValidator, awsImageUploader, userEdit);
 
 // User get data
-router.get('/auth/me', getData);
+router.get('/auth/me', authenticated, getData);
 
 // User register
 router.post('/auth/signup', userValidation.signup, signup);

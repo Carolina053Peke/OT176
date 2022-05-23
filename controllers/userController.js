@@ -172,8 +172,7 @@ const userController = {
     }
   },
   getData: async (req, res) => {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-    const { id } = await verifyToken(token);
+    const { id } = req.user;
     try {
       if (id) {
         const user = await db.User.findOne({
