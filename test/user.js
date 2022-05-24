@@ -22,6 +22,13 @@ const propUser = {
   email: 'tadeogaven@gmail.com',
   password: 'Password123',
 };
+const newUserData = {
+  firstName: 'updated',
+  lastName: 'updated',
+  email: 'tadeogaven@gmail.com',
+  password: 'Password123',
+  image: 'http://image.jpg',
+};
 
 let token;
 
@@ -121,10 +128,10 @@ describe('This test all should fail', () => {
     it('deleting user should fail', (done) => {
       chai
         .request(app)
-        .put(`/users/delete/${id}`)
+        .delete(`/users/${id}`)
         .end((err, res) => {
-          res.should.have.status(500);
-          res.body.should.be.a('object').have.property('msg').eq('Pelase contact the administrator');
+          res.should.have.status(403);
+          res.body.should.be.a('object').have.property('error').eq('Forbidden');
           done();
         });
     });
@@ -244,16 +251,9 @@ describe('Update user data ', () => {
           });
       });
     });
+
     describe('/update user data', () => {
       it('should update user data successfully', (done) => {
-        const newUserData = {
-          firstName: 'updated',
-          lastName: 'updated',
-          email: 'tadeogaven@gmail.com',
-          password: 'Password123',
-          image: 'http://image.jpg',
-        };
-
         chai
           .request(app)
           .patch(`/users/users/${id}`)
@@ -266,7 +266,7 @@ describe('Update user data ', () => {
             res.should.have.status(200);
             res.body.should.have.property('message').eq('User updated successfully!');
             res.body.should.be.a('object');
-            res.body.should.have.property('data');
+            // res.body.should.have.property('data');
             done();
           });
       });
@@ -283,7 +283,7 @@ describe('Delete user', () => {
         chai
           .request(app)
           .post('/users/auth/login')
-          .send(guestUser)
+          .send(newUserData)
           .end((err, res) => {
             token = res.body.token;
             id = res.body.user.id;
@@ -295,9 +295,10 @@ describe('Delete user', () => {
     });
     describe('/delete user', () => {
       it('should delete user data successfully', (done) => {
+        console.log(id);
         chai
           .request(app)
-          .delete(`/users/delete/${id}`)
+          .delete(`/users/${id}`)
           .set({
             Authorization: `Bearer ${token}`,
           })
