@@ -67,7 +67,7 @@ const categoryController = {
           where: {
             id: req.params.id,
           },
-        }
+        },
       )
         .then((result) => {
           const response = {
