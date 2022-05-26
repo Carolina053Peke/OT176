@@ -1,124 +1,127 @@
-const db = require("../models");
+const db = require('../models');
+const { pagination } = require('../utils/paginate');
 
 const newController = {
-    //Find all news
-	list: async (req, res, next) => {
-		try {
-			const news = await db.New.findAll({
-				
-			});
+  // Find all news
+  list: async (req, res, next) => {
+    const { limit, page } = req.query;
+    try {
+      const news = await pagination(db.New, {}, page, limit);
+      res.status(200).json({
+        success: true,
+        count: news.length,
+        data: news,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error',
+      });
+    }
+  },
+  // Store news
 
-			return res.status(200).json({
-				success: true,
-				count: news.length,
-				data: news,
-			});
-		} catch (err) {
-			return res.status(500).json({
-				success: false,
-				error: 'Server Error',
-			});
-		}
-	},
-    //Store news
+  store: async (req, res, next) => {
+    try {
+      const news = await db.New.create({
+        name: req.body.name,
+        content: req.body.content,
+        image: req.body.image,
+        user_id: req.user_id,
+        categoryId: req.body.categoryId,
+        type: req.body.type,
+      });
+      return res.status(201).json({
+        success: true,
+        data: news,
+      });
+    } catch (err) {
+      /* return res.status(500).json({
+        success: false,
+        error: 'Server Error',
+      }); */
+      console.log('error', err);
+    }
+  },
+  // Update News
 
-	store: async (req, res, next) => {
-		try {
-			const news = await db.New.create({
-				name: req.body.name,
-				content: req.body.content,
-				image: req.body.image,
-				userId: req.body.userId,
-				categoryId: req.body.categoryId,
-			});
-			return res.status(201).json({
-				success: true,
-				data: news,
-			});
-		} catch (err) {
-			return res.status(500).json({
-				success: false,
-				error: 'Server Error',
-			});
-		}
-	},
-    //Update News
+  update: async (req, res, next) => {
+    try {
+      const news = await db.New.update(req.body, {
+        where: { id: req.params.id },
+      });
 
-	update: async (req, res, next) => {
-		try {
-			const news = await db.New.update(req.body, {
-				where: { id: req.params.id },
-			});
+      if (!news) {
+        return res.status(404).json({
+          success: false,
+          error: 'No news found',
+        });
+      }
 
-			if (!news) {
-				return res.status(404).json({
-					success: false,
-					error: 'No news found',
-				});
-			}
+      const newNews = await db.New.findByPk(req.params.id);
 
-			return res.status(201).json({
-				success: true,
-				data: {},
-			});
-		} catch (err) {
-			return res.status(500).json({
-				success: false,
-				error: 'Server Error',
-			});
-		}
-	},
+      return res.status(200).json({
+        success: true,
+        data: { newNews },
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error',
+      });
+    }
+  },
 
-    // Delete
+  // Delete
 
-	delete: async (req, res, next) => {
-		try{
-            const news = await db.New.findByPk(req.params.id);
-    
-            if(!news)  {
-                return res.status(404).json({
-                    success: false,
-                    error: 'No data found'
-                });
-            }    
-            await news.destroy();
-    
-            return res.status(200).json({
-                success: true,
-                data:{}
-            });
-            }   
-            catch (err){
-            return res.status(500).json({
-                success: false,
-                error: 'Server Error'
-            });
-            }	},
+  removeNew: async (req, res, next) => {
+    try {
+      const news = await db.New.findByPk(req.params.id);
 
-    // find news detail
+      if (!news) {
+        return res.status(404).json({
+          success: false,
+          error: 'No data found',
+        });
+      }
+      await news.destroy();
 
-	detail: async (req, res, next) => {
-		try {
-			const news = await db.New.findByPk(req.params.id);
+      return res.status(200).json({
+        success: true,
+        data: 'The news has been successfully deleted',
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error',
+      });
+    }
+  },
 
-			if (!news) {
-				return res.status(404).json({
-					success: false,
-					error: 'No news found',
-				});
-			}
+  // find news detail
 
-			return res.status(200).json({
-				success: true,
-				data: news,
-			});
-		} catch (err) {
-			return res.status(500).json({
-				success: false,
-				error: 'Server Error',
-			});
-		}
-	},
+  detail: async (req, res, next) => {
+    try {
+      const news = await db.New.findByPk(req.params.id);
+
+      if (!news) {
+        return res.status(404).json({
+          success: false,
+          error: 'No news found',
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        data: news,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error',
+      });
+    }
+  },
 };
 
 module.exports = newController;

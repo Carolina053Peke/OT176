@@ -1,8 +1,8 @@
-'use strict';
 const {
-  Model
+  Model,
 } = require('sequelize');
 const user = require('./user');
+
 module.exports = (sequelize, DataTypes) => {
   class Comments extends Model {
     /**
@@ -12,17 +12,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-       
+
     }
-  };
+  }
   Comments.init({
     user_id: DataTypes.INTEGER,
     body: DataTypes.TEXT,
     news_id: DataTypes.INTEGER,
-    deletedAt: DataTypes.DATE
+    deletedAt: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'Comments',
+    paranoid: true,
   });
   return Comments;
 };
