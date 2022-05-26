@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 const db = require('../models');
 const { createToken, verifyToken } = require('../utils/jwt');
 const sendMail = require('../utils/sendMail');
@@ -206,6 +207,20 @@ const userController = {
         msg: 'Please contact the administrator',
       });
     }
+  },
+  // Google SingIn
+
+  googleSingIn: () => passport.authenticate('google', {
+    scope: ['email', 'profile'],
+  }),
+
+  googleRedirection: () => passport.authenticate('google', {
+    successRedirect: 'http://localhost:3000/users/session',
+    failureRedirect: 'http://localhost:3000/users/unauthorized',
+  }),
+
+  userInfo: (req, res) => {
+    res.status(200).send(`Logged in with ${req.user.email} account. App Token : ${req.user.token}`);
   },
 };
 
