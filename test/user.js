@@ -251,9 +251,11 @@ describe('Update user data ', () => {
           });
       });
     });
+    
 
     describe('/update user data', () => {
       it('should update user data successfully', (done) => {
+        
         chai
           .request(app)
           .patch(`/users/users/${id}`)
@@ -266,7 +268,7 @@ describe('Update user data ', () => {
             res.should.have.status(200);
             res.body.should.have.property('message').eq('User updated successfully!');
             res.body.should.be.a('object');
-            // res.body.should.have.property('data');
+            //res.body.should.have.property('data');
             done();
           });
       });
@@ -295,7 +297,7 @@ describe('Delete user', () => {
     });
     describe('/delete user', () => {
       it('should delete user data successfully', (done) => {
-        console.log(id);
+        console.log(id)
         chai
           .request(app)
           .delete(`/users/${id}`)

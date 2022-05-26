@@ -1,6 +1,9 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+<<<<<<< HEAD
 const passport = require('passport');
+=======
+>>>>>>> 11af682c0c23b71661b6f192c51e5b38d7db9095
 const db = require('../models');
 const { createToken, verifyToken } = require('../utils/jwt');
 const sendMail = require('../utils/sendMail');

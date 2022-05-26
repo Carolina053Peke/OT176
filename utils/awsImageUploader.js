@@ -17,6 +17,7 @@ const uploadImg = async (req, res, next) => {
       });
     }
     if (!req.file) return next();
+<<<<<<< HEAD
     const myFile = await req.file.originalname.split('.');
     console.log('myFile', myFile);
     const fileType = await myFile[myFile.length - 1];
@@ -38,6 +39,29 @@ const uploadImg = async (req, res, next) => {
 
     req.user.image = `https://${params.Bucket}.s3.amazonaws.com/${image.singlePart.params.Key}`;
     next();
+=======
+      const myFile = await req.file.originalname.split('.');
+      console.log('myFile', myFile);
+      const fileType = await myFile[myFile.length - 1];
+
+      console.log('myFile', myFile);
+      console.log('fileType', fileType);
+
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `${uuidv4()}.${fileType}`,
+        Body: req.file.buffer,
+        ACL: 'public-read',
+        ContentEncoding: 'base64',
+        ContentDisposition: 'inline',
+        ContentType: 'image/jpeg',
+      };
+
+      const image = await s3.upload(params, (error, data) => {});
+
+      req.user.image = `https://${params.Bucket}.s3.amazonaws.com/${image.singlePart.params.Key}`;
+      next();
+>>>>>>> 11af682c0c23b71661b6f192c51e5b38d7db9095
   } catch (error) {
     console.log('error', error);
   }
