@@ -56,13 +56,8 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
         .post('/users/auth/signup')
         .send(userSignUp1)
         .end((err, res) => {
-          if (err) {
-            done(err);
-          } else {
-            token = res.body.token;
             res.should.have.status(200);
             done();
-          }
         });
     });
     it('Signup: Validation error', (done) => {
@@ -70,13 +65,8 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
         .post('/users/auth/signup')
         .send(userSignUp2)
         .end((err, res) => {
-          if (err) {
-            done(err);
-          } else {
-            token = res.body.token;
             res.should.have.status(400);
             done();
-          }
         });
     });
     it('Signup: User already exists', (done) => {
@@ -84,13 +74,8 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
         .post('/users/auth/signup')
         .send(userSignUp1)
         .end((err, res) => {
-          if (err) {
-            done(err);
-          } else {
-            token = res.body.token;
             res.should.have.status(409);
             done();
-          }
         });
     });
   });
@@ -102,13 +87,10 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
         .post('/users/auth/login')
         .send(userLogin1)
         .end((err, res) => {
-          if (err) {
-            done(err);
-          } else {
             token = res.body.token;
+            id = res.body.user.id;
             res.should.have.status(200);
             done();
-          }
         });
     });
     it('Login: Validation error', (done) => {
@@ -116,13 +98,8 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
         .post('/users/auth/login')
         .send(userLogin2)
         .end((err, res) => {
-          if (err) {
-            done(err);
-          } else {
-            token = res.body.token;
             res.should.have.status(400);
             done();
-          }
         });
     });
     it('Login: Wrong password', (done) => {
@@ -130,13 +107,8 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
         .post('/users/auth/login')
         .send(userLogin3)
         .end((err, res) => {
-          if (err) {
-            done(err);
-          } else {
-            token = res.body.token;
             res.should.have.status(401);
             done();
-          }
         });
     });
     it('Login: User not found', (done) => {
@@ -144,13 +116,8 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
         .post('/users/auth/login')
         .send(userLogin4)
         .end((err, res) => {
-          if (err) {
-            done(err);
-          } else {
-            token = res.body.token;
             res.should.have.status(404);
             done();
-          }
         });
     });
   });
@@ -162,13 +129,10 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
         .post('/users/auth/login')
         .send(userLogin1)
         .end((err, res) => {
-          if (err) {
-            done(err);
-          } else {
             token = res.body.token;
+            id = res.body.user.id;
             res.should.have.status(200);
             done();
-          }
         });
     });
     it('Get logged user data: Successfully', (done) => {
@@ -176,17 +140,26 @@ describe(' ------------- AUTH ENDPOINTS ------------- ', () => {
         .get('/users/auth/me')
         .set({
           Authorization: `Bearer ${token}`,
-          'content-type': 'application/x-www-form-urlencoded',
         })
         .end((err, res) => {
-          if (err) {
-            done(err);
-          } else {
             res.should.have.status(200);
             res.body.should.be.a('object');
             res.body.should.have.property('msg');
             done();
-          }
+        });
+    });
+    it('should delete created user successfully', (done) => {
+      chai
+        .request(server)
+        .delete(`/users/${id}`)
+        .set({
+          Authorization: `Bearer ${token}`,
+        })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a('object');
+          res.body.should.have.property('msg').eq('The user has been soft-deleted');
+          done();
         });
     });
   });

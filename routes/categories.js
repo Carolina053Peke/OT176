@@ -6,16 +6,15 @@ const {
 } = require('../controllers/categoryController');
 const categoryValidator = require('../validations/categories');
 const authAdmin = require('../middlewares/authAdmin');
-const awsImageUploader = require('../utils/awsImageUploader');
 
 // Categories list
 router.get('/', authAdmin, categoryList);
 
 // Category create
-router.post('/', authAdmin, categoryValidator, awsImageUploader, categoryCreate);
+router.post('/', authAdmin, categoryValidator, categoryCreate);
 
 // Category edit
-router.put('/:id', authAdmin, categoryValidator, awsImageUploader, categoryEdit);
+router.put('/:id', authAdmin, categoryValidator, categoryEdit);
 
 // Category detail
 router.get('/:id', authAdmin, categoryDetail);
